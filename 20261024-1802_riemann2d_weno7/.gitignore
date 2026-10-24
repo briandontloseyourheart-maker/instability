@@ -1,0 +1,11 @@
+/build*/
+/results/
+/runs/
+__pycache__/
+*.pyc
+/.venv/
+/.vscode/
+Backtrace.*
+plt*/
+chk*/
+diagnostics.csv

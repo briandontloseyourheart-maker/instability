@@ -1,0 +1,52 @@
+# Quick test: uniform 256 x 256, t = 0 ... 0.8 (a few minutes)
+max_step  = 10000000
+stop_time = 0.8
+
+amr.n_cell          = 256 256
+amr.max_level       = 0
+amr.max_grid_size   = 64
+amr.blocking_factor = 16
+amr.plot_per        = 0.2
+amr.checkpoint_files_output = 0
+
+geometry.coord_sys   = 0
+geometry.prob_lo     = 0.0 0.0
+geometry.prob_hi     = 1.0 1.0
+geometry.is_periodic = 0 0
+
+# all-regular EB geometry: plain Cartesian box
+eb2.geom_type = all_regular
+
+# BC flags: 2 = outflow (zero-gradient) on all sides
+cns.lo_bc = 2 2
+cns.hi_bc = 2 2
+
+cns.eos_gamma       = 1.4
+cns.do_visc         = 0
+cns.do_reflux       = 1
+cns.refine_cutcells = 0
+cns.v               = 0
+
+# numerics: 7th-order WENO-Z (characteristic) + Roe flux, SSPRK(10,4)
+cns.hydro_scheme = 1
+cns.weno_z       = 1
+cns.rk_scheme    = 104
+cns.cfl          = 1.5    # SSPRK(10,4) has SSP coefficient 6 (forward-Euler CFL x 6)
+
+amr.ref_ratio       = 2 2 2 2
+amr.regrid_int      = 2
+amr.n_error_buf     = 2
+amr.grid_eff        = 0.7
+amr.v               = 1
+amr.plot_files_output = 1
+amr.plot_file         = plt
+amr.derive_plot_vars  = pressure x_velocity y_velocity
+
+# Configuration 3 (Lax & Liu 1998), quadrants: UR UL LL LR, split at (0.8, 0.8)
+prob.type = 0
+prob.x0   = 0.8
+prob.y0   = 0.8
+prob.rho  = 1.5  0.5323 0.138 0.5323
+prob.u    = 0.0  1.206  1.206 0.0
+prob.v    = 0.0  0.0    1.206 1.206
+prob.p    = 1.5  0.3    0.029 0.3
