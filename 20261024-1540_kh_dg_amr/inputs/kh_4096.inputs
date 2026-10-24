@@ -1,0 +1,47 @@
+# Production run: 64^2 base grid refined by six levels of factor 2,
+# i.e. an effective resolution of 64 * 2^6 = 4096^2 cells.
+max_step  = 10000000
+stop_time = 3.0
+
+geometry.coord_sys   = 0
+geometry.prob_lo     = 0.0 0.0
+geometry.prob_hi     = 1.0 1.0
+geometry.is_periodic = 1 1
+
+amr.n_cell          = 64 64
+amr.max_level       = 6
+amr.ref_ratio       = 2 2 2 2 2 2
+amr.regrid_int      = 2
+amr.blocking_factor = 8
+amr.max_grid_size   = 64
+amr.n_error_buf     = 2
+amr.grid_eff        = 0.7
+amr.v               = 1
+
+amr.plot_files_output       = 1
+amr.plot_file               = plt
+amr.plot_per                = 0.05
+amr.plot_vars               = NONE
+amr.derive_plot_vars        = density x_velocity y_velocity pressure vorticity dg_sensor
+amr.checkpoint_files_output = 1
+amr.check_file              = chk
+amr.check_per               = 0.5
+
+dg.v              = 1
+dg.cfl            = 0.6
+dg.rk_order       = 3
+dg.gamma          = 1.6666666666666667
+dg.refine_dengrad = 0.02
+dg.diag_file      = diagnostics.csv
+
+prob.rho_in   = 2.0
+prob.rho_out  = 1.0
+prob.v_in     = 0.5
+prob.v_out    = -0.5
+prob.p0       = 2.5
+prob.delta    = 0.0035
+prob.w0       = 0.1
+# A little multi-mode noise seeds the small secondary billows.
+prob.noise_amp   = 0.002
+prob.noise_modes = 32
+prob.noise_seed  = 12345

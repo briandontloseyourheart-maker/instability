@@ -1,0 +1,40 @@
+# Small, fast test: 64^2 base grid + 2 levels (effective 256^2), short time.
+max_step  = 100000
+stop_time = 0.2
+
+geometry.coord_sys   = 0
+geometry.prob_lo     = 0.0 0.0
+geometry.prob_hi     = 1.0 1.0
+geometry.is_periodic = 1 1
+
+amr.n_cell          = 64 64
+amr.max_level       = 2
+amr.ref_ratio       = 2 2
+amr.regrid_int      = 2
+amr.blocking_factor = 8
+amr.max_grid_size   = 32
+amr.n_error_buf     = 2
+amr.grid_eff        = 0.7
+amr.v               = 1
+
+amr.plot_files_output       = 1
+amr.plot_file               = plt
+amr.plot_int                = 50
+amr.plot_vars               = NONE
+amr.derive_plot_vars        = density x_velocity y_velocity pressure vorticity dg_sensor
+amr.checkpoint_files_output = 0
+
+dg.v              = 1
+dg.cfl            = 0.6
+dg.rk_order       = 3
+dg.gamma          = 1.6666666666666667
+dg.refine_dengrad = 0.02
+dg.diag_file      = diagnostics.csv
+
+prob.rho_in   = 2.0
+prob.rho_out  = 1.0
+prob.v_in     = 0.5
+prob.v_out    = -0.5
+prob.p0       = 2.5
+prob.delta    = 0.01
+prob.w0       = 0.1
