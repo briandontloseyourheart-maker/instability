@@ -98,7 +98,7 @@ def main():
 
     fig.tight_layout()
     out = args.output or args.plotfile.with_name(args.plotfile.name.rstrip("/") + f"_{args.var}.png")
-    fig.savefig(out, dpi=150)
+    fig.savefig(out, dpi=150, bbox_inches="tight")
     print(out)
 
 

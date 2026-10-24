@@ -15,6 +15,30 @@ gives inherent conservation, much lower advection and diffusion errors than a
 finite-volume scheme of the same cost, and a compact stencil (only face
 neighbours) with lots of local work, which suits massively parallel machines.
 
+## Example result
+
+The demo below uses a 64² base grid with 2 AMR levels (256² effective),
+shown at t = 1.5. Density runs from 1 (dark blue) to 2 (yellow). The right
+panel zooms on the edge of a vortex, with the DG cells drawn; each cell holds
+a bicubic polynomial. Mass, momentum and energy stay constant to about 1e-14
+over the whole run (`docs/diagnostics_256.csv`).
+
+![KH density, 4th-order DG + AMR, t = 1.5](docs/kh_dg_t15.png)
+
+Earlier in the same run, at t = 0.75:
+
+![KH density, t = 0.75](docs/kh_dg_t075.png)
+
+To reproduce it:
+
+```bash
+../../build/bin/kh_dg ../../inputs/kh_test.inputs stop_time=1.5 amr.plot_per=0.25 \
+    prob.noise_amp=0.002 prob.noise_modes=32
+```
+
+The production run, `inputs/kh_4096.inputs`, uses the same setup on 64² + 6
+levels (4096² effective).
+
 ## Build
 
 Requirements: a C++17 compiler, CMake ≥ 3.20, Python 3 (tests/plots), and an
