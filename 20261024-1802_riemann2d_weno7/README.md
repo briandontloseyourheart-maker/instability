@@ -75,6 +75,34 @@ The run writes:
 * `diagnostics.csv`, with mass, momentum, energy and the density and pressure
   extrema for every step.
 
+## Parallel runs with MPI
+
+The default build uses OpenMP only. For MPI, install an MPI library first, for
+example `sudo apt install libopenmpi-dev openmpi-bin` on Ubuntu. Then configure
+a separate build directory with `-DRP2D_USE_MPI=ON`:
+
+```bash
+cmake -S . -B build-mpi -DCMAKE_BUILD_TYPE=Release -DAMREX_SOURCE_DIR=$PWD/../../amrex -DRP2D_USE_MPI=ON
+cmake --build build-mpi -j 8
+```
+
+Run with `mpiexec`, either one rank per core or MPI ranks combined with OpenMP
+threads:
+
+```bash
+mkdir -p runs/mpi && cd runs/mpi
+OMP_NUM_THREADS=1 mpiexec -n 8 ../../build-mpi/bin/riemann2d ../../inputs/rp2d_2048.inputs
+# hybrid: 4 ranks x 2 threads
+OMP_NUM_THREADS=2 mpiexec -n 4 ../../build-mpi/bin/riemann2d ../../inputs/rp2d_2048.inputs
+```
+
+Each rank works on a share of the grid boxes, so give every rank several boxes.
+Lower `amr.max_grid_size` if there are more ranks than boxes. Plotfiles are
+written in parallel (`Level_0/Cell_D_00000`, `Cell_D_00001`, …), and the plot
+scripts read them as usual. With an installed AMReX (`-DAMReX_DIR=…`), MPI is
+on only if that AMReX was built with `AMReX_MPI=ON`. When running as root,
+OpenMPI also needs `--allow-run-as-root`.
+
 ## Physical setup
 
 * Unit square with outflow (zero-gradient) boundaries.
