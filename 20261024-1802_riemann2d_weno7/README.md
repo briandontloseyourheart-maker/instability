@@ -52,7 +52,8 @@ works: pass `-DAMReX_DIR=<prefix>/lib/cmake/AMReX` instead.
 ```bash
 mkdir -p runs/test && cd runs/test
 OMP_NUM_THREADS=4 ../../build/bin/riemann2d ../../inputs/rp2d_test.inputs
-python3 ../../tools/plot_riemann.py plt00XXX          # density + contours (RdBu_r)
+python3 ../../tools/plot_riemann.py            # newest plotfile here: density + contours (RdBu_r)
+python3 ../../tools/plot_riemann.py plt00100   # or a specific plotfile
 ```
 
 | inputs file | grid | purpose |
@@ -63,7 +64,8 @@ python3 ../../tools/plot_riemann.py plt00XXX          # density + contours (RdBu
 
 Any parameter can be overridden on the command line, for example
 `amr.n_cell="1024 1024" stop_time=0.5`. To restart from a checkpoint, add
-`amr.restart=chk00XXX`.
+`amr.restart=<checkpoint>` with the name of an existing
+`chkNNNNN` directory, e.g. `amr.restart=chk00400`.
 
 The run writes:
 

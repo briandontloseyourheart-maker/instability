@@ -57,7 +57,8 @@ def draw_zoom_grid(ax, pf, window):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("plotfile", type=Path)
+    ap.add_argument("plotfile", type=Path, nargs="?", default=Path("."),
+                    help="plotfile or run directory (default: newest plotfile in the current directory)")
     ap.add_argument("--var", default="density")
     ap.add_argument("--zoom", nargs=3, type=float, metavar=("XC", "YC", "W"),
                     help="centre and width of a zoom window")
@@ -66,6 +67,7 @@ def main():
     ap.add_argument("--vmax", type=float)
     ap.add_argument("-o", "--output", type=Path)
     args = ap.parse_args()
+    args.plotfile = apf.resolve(args.plotfile)
 
     pf = apf.read(args.plotfile, [args.var])
     img = apf.composite(pf, args.var)

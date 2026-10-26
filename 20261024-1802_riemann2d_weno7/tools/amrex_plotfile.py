@@ -63,8 +63,26 @@ def _read_fab(path: Path, offset: int, nvar: int):
     return lo, hi, raw.reshape(ncomp, ny, nx)
 
 
-def read(path: str | Path, variables: list[str] | None = None) -> Plotfile:
+def resolve(path: str | Path = ".") -> Path:
+    """Return a plotfile directory.
+
+    `path` may be a plotfile itself, or a run directory, in which case the
+    newest plotfile in it (highest pltNNNNN number) is used.
+    """
     path = Path(path)
+    if (path / "Header").is_file():
+        return path
+    if path.is_dir():
+        found = sorted(d for d in path.glob("plt*") if (d / "Header").is_file())
+        if found:
+            return found[-1]
+        raise FileNotFoundError(f"no plotfiles (plt*/Header) found in '{path}'")
+    raise FileNotFoundError(f"'{path}' is not a plotfile directory; "
+                            "pass e.g. plt00100 or the run directory")
+
+
+def read(path: str | Path, variables: list[str] | None = None) -> Plotfile:
+    path = resolve(path)
     lines = (path / "Header").read_text().splitlines()
     it = iter(lines)
     next(it)                                  # version string

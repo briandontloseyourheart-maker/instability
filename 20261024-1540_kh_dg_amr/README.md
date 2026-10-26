@@ -71,7 +71,7 @@ Compile-time options:
 ```bash
 mkdir -p runs/test && cd runs/test
 OMP_NUM_THREADS=4 ../../build/bin/kh_dg ../../inputs/kh_test.inputs
-python3 ../../tools/plot_kh.py plt00050 --zoom 0.5 0.75 0.1 --grid
+python3 ../../tools/plot_kh.py --zoom 0.5 0.75 0.1 --grid
 ```
 
 | inputs file | grid | purpose |

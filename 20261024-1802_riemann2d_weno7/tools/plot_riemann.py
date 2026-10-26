@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Plot a 2D Riemann problem plotfile: filled density map plus density contours.
 
+    python tools/plot_riemann.py          # newest plotfile in the current directory
     python tools/plot_riemann.py plt00480
     python tools/plot_riemann.py plt00480 --var pressure --cmap viridis --contours 0
     python tools/plot_riemann.py plt00480 --zoom 0.0 0.5 0.0 0.5 -o zoom.png
@@ -20,7 +21,8 @@ import amrex_plotfile as apf  # noqa: E402
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("plotfile", type=Path)
+    ap.add_argument("plotfile", type=Path, nargs="?", default=Path("."),
+                    help="plotfile or run directory (default: newest plotfile in the current directory)")
     ap.add_argument("--var", default="density")
     ap.add_argument("--cmap", default="RdBu_r", help="matplotlib colormap (default RdBu_r)")
     ap.add_argument("--contours", type=int, default=30, help="number of contour lines (0 = none)")
@@ -29,6 +31,7 @@ def main():
     ap.add_argument("--vmax", type=float)
     ap.add_argument("-o", "--output", type=Path)
     args = ap.parse_args()
+    args.plotfile = apf.resolve(args.plotfile)
 
     pf = apf.read(args.plotfile, [args.var])
     img = apf.composite(pf, args.var)
