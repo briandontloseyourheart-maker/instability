@@ -42,6 +42,10 @@ amr.ref_ratio       = 2 2 2 2 2 2
 amr.regrid_int      = 2
 amr.blocking_factor = 8
 amr.n_error_buf     = 2
+# proper-nesting buffer between AMR levels (coarse cells). The default of 1
+# left ghost cells in corners across the periodic boundary unfilled on deep
+# hierarchies (NaN at t ~ 0.62 with 6 levels); 2 fixes it.
+amr.n_proper        = 2
 amr.grid_eff        = 0.7
 amr.v               = 1
 
