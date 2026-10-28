@@ -81,6 +81,14 @@ def resolve(path: str | Path = ".") -> Path:
                             "pass e.g. plt00100 or the run directory")
 
 
+def all_plotfiles(path: str | Path = ".") -> list[Path]:
+    """All plotfiles (pltNNNNN with a Header) in a run directory, oldest first."""
+    found = sorted(d for d in Path(path).glob("plt*") if (d / "Header").is_file())
+    if not found:
+        raise FileNotFoundError(f"no plotfiles (plt*/Header) found in '{path}'")
+    return found
+
+
 def read(path: str | Path, variables: list[str] | None = None) -> Plotfile:
     path = resolve(path)
     lines = (path / "Header").read_text().splitlines()

@@ -20,6 +20,8 @@ The layout follows
 
 ![Riemann configuration 3, density](docs/rp2d_density_t08_512.png)
 
+![Numerical schlieren and synthetic interferogram](docs/rp2d_schlieren_interferogram_t08_512.png)
+
 The demo above is 512² at t = 0.8: density in a red-blue map, with 30
 contour lines. The production run is the same setup on 2048²
 (`inputs/rp2d_2048.inputs`). That run needs a workstation or cluster, because
@@ -74,6 +76,35 @@ The run writes:
 * `chkNNNNN/` checkpoints.
 * `diagnostics.csv`, with mass, momentum, energy and the density and pressure
   extrema for every step.
+
+## Images and videos
+
+Run all scripts in the run folder, for example `runs/test`. Each needs
+numpy and matplotlib, and Pillow for videos. Every PNG is saved next to its
+plotfile as `pltNNNNN_<kind>.png`.
+
+| script | output |
+|---|---|
+| `tools/plot_riemann.py` | density map + contour lines (`_density.png`) |
+| `tools/plot_optics.py --mode schlieren` | numerical schlieren, exp(−k·\|∇ρ\|/max\|∇ρ\|) (`_schlieren.png`) |
+| `tools/plot_optics.py --mode interferogram` | synthetic interferogram, cos²(π·Δρ/δρ): each dark fringe is a density isoline (`_interferogram.png`); add `--carrier 40` for finite-fringe mode |
+| `tools/plot_optics.py` | schlieren and interferogram side by side (`_both.png`) |
+| `tools/make_video.py` | MP4 (needs `ffmpeg`) or GIF from a series of PNGs |
+
+```bash
+python3 ../../tools/plot_riemann.py                  # newest plotfile
+python3 ../../tools/plot_optics.py plt00100 -k 20    # one time, more schlieren contrast
+# a video: render every plotfile, then join the frames
+python3 ../../tools/plot_riemann.py --all
+python3 ../../tools/make_video.py "plt*_density.png" -o density.mp4 --fps 10
+python3 ../../tools/plot_optics.py --all --mode schlieren
+python3 ../../tools/make_video.py "plt*_schlieren.png" -o schlieren.gif --fps 10
+```
+
+With `--all`, every frame shares one colour range and one fringe spacing, so
+the video does not flicker. For a smooth video, write plotfiles often, for
+example `amr.plot_per=0.01`. Each script has a `--help` listing its options:
+zoom, colour map, fringe count, dpi, and more.
 
 ## Parallel runs with MPI
 
@@ -168,7 +199,7 @@ every stage. `cns.rk_scheme = 2` restores the original RK2.
 │   ├── main.cpp, diagnostics.*      driver and per-step diagnostics
 │   ├── solver/                      AMReX CNS + WENO7/Roe kernel + SSPRK(10,4)
 │   └── problem/                     four-quadrant initial data, prob.* parameters
-├── tools/         plotfile reader and density plot
+├── tools/         plotfile reader, density / schlieren / interferogram plots, video maker
 ├── tests/         CTest smoke test (order of accuracy, positivity, symmetry)
 └── docs/          example images
 ```
